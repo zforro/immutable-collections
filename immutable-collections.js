@@ -142,18 +142,16 @@ export class ImmutableCollection extends Mongo.Collection {
               )
             );
           };
-         
-          const res = super.insert(newDoc);
-          if (res) {
-            super.update(
-              {_id: doc._id},
-              {
-                $set: {
-                  'tx.latestUntil': txDate,
-                  userId: Meteor.userId()
-                }
-              });
-          }
+
+          super.update(
+            {_id: doc._id},
+            {
+              $set: {
+                'tx.latestUntil': txDate,
+                userId: Meteor.userId()
+              }
+            });
+          super.insert(newDoc);
         }
       });
       if (_callback) {
