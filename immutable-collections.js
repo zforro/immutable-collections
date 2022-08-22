@@ -27,6 +27,9 @@ export class ImmutableCollection extends Mongo.Collection {
     };
 
     const {name, entityId, schema, index} = params;
+    if (!params.idGeneration) {
+      params.idGeneration = 'MONGO';
+    }
 
     super(name, params);
     this.entityId = entityId;
