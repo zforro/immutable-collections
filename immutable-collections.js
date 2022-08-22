@@ -27,6 +27,7 @@ export class ImmutableCollection extends Mongo.Collection {
     };
 
     const {name, entityId, schema, index} = params;
+
     super(name, params);
     this.entityId = entityId;
     this.schema = schema;
@@ -92,7 +93,7 @@ export class ImmutableCollection extends Mongo.Collection {
       ...doc, ...{
         tx: {
           latestFrom: new Date(),
-          userId: Meteor.userId()
+          userId: userId()
         }
       }
     };
@@ -131,7 +132,7 @@ export class ImmutableCollection extends Mongo.Collection {
         if (!_.isEqual(doc, updatedDoc)) {
           const newDoc = _(updatedDoc)
                 .set('tx.latestFrom', txDate)
-                .set('tx.userId', Meteor.userId())
+                .set('tx.userId', userId())
                 .omit('_id')
                 .value();
           const [err, __] = validate(newDoc, this.schema);
@@ -148,7 +149,7 @@ export class ImmutableCollection extends Mongo.Collection {
             {
               $set: {
                 'tx.latestUntil': txDate,
-                userId: Meteor.userId()
+                userId: userId()
               }
             });
           super.insert(newDoc);
@@ -189,7 +190,7 @@ export class ImmutableCollection extends Mongo.Collection {
     return super.update(selector, {
       $set: {
         'tx.latestUntil': new Date(),
-        userId: Meteor.userId()
+        userId: userId()
       }
     });
   }
@@ -234,6 +235,16 @@ const processArgs = (options, callback) => {
         : undefined;
   
   return [_options, _callback];
+};
+
+const userId = () => {
+  try {
+    return userId();
+  }
+  catch (err) {
+    // Meteor.userId() not called within a method or publication
+    return undefined;
+  }
 };
 
 
