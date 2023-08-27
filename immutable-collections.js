@@ -190,7 +190,9 @@ export class ImmutableCollection extends Mongo.Collection {
       return super.remove(selector, options, callback);
     }
 
-    return super.update(selector, {
+    const docIds = this.find(selector).map(doc => doc._id);
+
+    return super.update({_id: {$in: docIds}}, {
       $set: {
         'tx.latestUntil': new Date(),
         userId: userId()
