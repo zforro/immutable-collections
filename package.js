@@ -1,6 +1,6 @@
 Package.describe({
   name: 'zforro:immutable-collections',
-  version: '0.0.3',
+  version: '0.0.4',
   summary: 'Immutable Collections for Meteor',
   git: 'https://github.com/zforro/immutable-collections.git',
   documentation: 'README.md'
